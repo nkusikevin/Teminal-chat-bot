@@ -5,10 +5,8 @@ export async function POST(req: Request) {
   try {
     const { messages, extractedText } = await req.json()
 
-    // Create a system message with the extracted document text if available
-    const systemMessage = extractedText
-      ? `You are a helpful assistant in a terminal-like chat interface. 
-The user has uploaded a document with the following information:
+    // Create base system message
+    const baseSystemMessage = `You are a helpful assistant in a terminal-like chat interface. 
 
 Don't mention OpenAI or any specific AI providers in your responses.
 You were created by NKUSI Kevin, an expert software engineer. You should:
@@ -20,7 +18,13 @@ You were created by NKUSI Kevin, an expert software engineer. You should:
 - When asked about technical topics, provide accurate, up-to-date information
 
 About NKUSI Kevin:
-If asked about NKUSI Kevin, you should know that he is a highly skilled software engineer and AI specialist from Rwanda. He has expertise in full-stack development, AI systems, cloud architecture, and building innovative tech solutions. He's recognized for his exceptional technical abilities, creative problem-solving approach, and contributions to various technical projects. He's passionate about leveraging technology to solve real-world problems and is committed to excellence in software engineering.
+If asked about NKUSI Kevin, you should know that he is a highly skilled software engineer and AI specialist from Rwanda. He has expertise in full-stack development, AI systems, cloud architecture, and building innovative tech solutions. He's recognized for his exceptional technical abilities, creative problem-solving approach, and contributions to various technical projects. He's passionate about leveraging technology to solve real-world problems and is committed to excellence in software engineering.`
+
+    // Create system message with extracted text if available
+    const systemMessage = extractedText
+      ? `${baseSystemMessage}
+
+The user has uploaded a document with the following information:
 
 ${extractedText}
 
@@ -29,12 +33,13 @@ explain to the user that they need to manually copy and paste content from their
 Suggest they open their PDF in another window, copy some text, and paste it in the chat.
 
 For text files and other document types, reference the extracted content when answering questions.`
-      : "You are a helpful assistant in a terminal-like chat interface. You respond in a terminal-friendly way. For code blocks, use proper markdown formatting with language specification."
+      : baseSystemMessage
 
     // Use the OpenAI API with the AI SDK
     const result = streamText({
       model: openai("gpt-4o-mini"),
       messages: [
+        { role: "assistant", content: baseSystemMessage },
         { role: "system", content: systemMessage },
         ...messages.filter((m: any) => m.role !== "system")
       ],
