@@ -2,7 +2,7 @@
 
 A modern web application built with Next.js and TypeScript that provides a command-line interface for chat interactions. This project combines the power of AI with a sleek, user-friendly interface.
 
-![Application Screenshot](/app.png)
+![Application Screenshot](/public/app.png)
 
 ## Technologies Used
 
