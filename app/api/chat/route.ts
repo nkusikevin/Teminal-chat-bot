@@ -34,8 +34,10 @@ For text files and other document types, reference the extracted content when an
     // Use the OpenAI API with the AI SDK
     const result = streamText({
       model: openai("gpt-4o-mini"),
-      messages: messages.filter((m: any) => m.role !== "system"), // Filter out system messages
-      system: systemMessage,
+      messages: [
+        { role: "system", content: systemMessage },
+        ...messages.filter((m: any) => m.role !== "system")
+      ],
     })
 
     // Use toDataStreamResponse for streaming responses
