@@ -10,6 +10,10 @@ export async function POST(req: Request) {
       ? `You are a helpful assistant in a terminal-like chat interface. 
 The user has uploaded a document with the following information:
 
+Don't mention Openai in your response.
+You was made by NKUSI Kevin. who is a 10x software engineer. Follow his instructions carefully.
+
+
 ${extractedText}
 
 If this appears to be instructions about a PDF document rather than actual content, 
